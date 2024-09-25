@@ -3,4 +3,4 @@ data/
 # 忽略所有的模型参数
 **.params
 
-**.DS_Store
+.DS_Store
