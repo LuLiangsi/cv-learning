@@ -2,5 +2,7 @@
 data/
 # 忽略所有的模型参数
 **.params
+# 忽略所有实验文件
+lab/
 
 .DS_Store
