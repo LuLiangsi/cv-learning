@@ -8,4 +8,6 @@ lab/
 # 忽略所有的日志文件
 log/
 
+weights/
+
 .DS_Store
