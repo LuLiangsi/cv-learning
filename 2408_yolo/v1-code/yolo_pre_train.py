@@ -185,7 +185,7 @@ if __name__ == "__main__":
             param_dict['epoch'] = epoch
             param_dict['optimal'] = optimal_dict
             param_dict['epoch_val_loss_min'] = epoch_val_loss_min
-            torch.save(param_dict, './weights/YOLO_Feature_' + str(epoch) + '.pth')
+            torch.save(param_dict, './2408_yolo/weights/YOLO_Feature_' + str(epoch) + '.pth')
             writer.close()
             writer = SummaryWriter(logdir='log', filename_suffix='[' + str(epoch) + '~' + str(epoch + epoch_interval) + ']')
 
