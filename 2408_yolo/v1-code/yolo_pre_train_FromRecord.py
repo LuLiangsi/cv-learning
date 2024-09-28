@@ -97,8 +97,7 @@ if __name__ == "__main__":
                 epoch_train_top5_acc = epoch_train_top5_acc + top5_acc
 
                 tbar.set_description(
-                    "train: class_loss:{} top1-acc:{} top5-acc:{}".format(loss.item(), round(top1_acc, 4),
-                                                                          round(top5_acc, 4), refresh=True))
+                    "train: class_loss:{} top1-acc:{} top5-acc:{}".format(loss.item(), round(top1_acc, 4), round(top5_acc, 4), refresh=True))
                 tbar.update(1)
 
             if args.feature_map_visualize:
@@ -134,8 +133,7 @@ if __name__ == "__main__":
                     epoch_val_top5_acc = epoch_val_top5_acc + top5_acc
 
                     tbar.set_description(
-                        "val: class_loss:{} top1-acc:{} top5-acc:{}".format(loss.item(), round(top1_acc, 4),
-                                                                            round(top5_acc, 4), refresh=True))
+                        "val: class_loss:{} top1-acc:{} top5-acc:{}".format(loss.item(), round(top1_acc, 4), round(top5_acc, 4), refresh=True))
                     tbar.update(1)
 
                 if args.feature_map_visualize:
