@@ -1,0 +1,3 @@
+imagesize
+opencv-python
+tensorBoard

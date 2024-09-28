@@ -9,7 +9,7 @@ from torch.utils.data import Dataset
 import torchvision.transforms as transforms
 
 class coco_classify_dataset(Dataset):
-    def __init__(self,imgs_path = "../DataSet/COCO2017/Train/Imgs", txts_path = "../DataSet/COCO2017/Train/Labels", is_train = True, edge_threshold=200, class_num=80, input_size=256):  # input_size:输入图像的尺度
+    def __init__(self,imgs_path = "./2408_yolo/data/coco2017/Train/Imgs", txts_path = "./2408_yolo/data/coco2017/Train//Labels", is_train = True, edge_threshold=200, class_num=80, input_size=256):  # input_size:输入图像的尺度
         img_names = os.listdir(txts_path)
         self.is_train = is_train
 
@@ -22,12 +22,14 @@ class coco_classify_dataset(Dataset):
         self.train_data = []  # [img_path,[[coord, class_id]]]
 
         for img_name in img_names:
+            if img_name == ".DS_Store":
+                continue
             img_path = os.path.join(imgs_path, img_name.replace(".txt", ".jpg"))
             txt_path = os.path.join(txts_path, img_name)
 
             coords = []
 
-            with open(txt_path, 'r') as label_txt:
+            with open(txt_path, 'r', encoding='utf-8', errors='ignore') as label_txt:
                 for label in label_txt:
                     label = label.replace("\n", "").split(" ")
                     class_id = int(label[4])

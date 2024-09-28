@@ -14,8 +14,8 @@ elif torch.backends.mps.is_available():
 else:
     device = torch.device('cpu')
 
-from pretrain.COCO_DataSet import coco_classify_dataset
-from pretrain.ImageNet_DataSet import ImageNet
+from data_process.COCO_DataSet import coco_classify_dataset
+
 from pretrain.YOLO_Feature import YOLO_Feature
 from utils.model import feature_map_visualize, accuracy
 
@@ -29,12 +29,12 @@ if __name__ == "__main__":
     parser.add_argument('--weight_decay', type=float, default=5e-4, help="weight decay")
     parser.add_argument('--epoch_num', type=int, default=200, help="train epoch")
     parser.add_argument('--save_interval', type=int, default=10, help="save interval")
-    parser.add_argument('--classes_num', type=int, default=80, help="classes num")
+    parser.add_argument('--class_num', type=int, default=80, help="classes num")
     parser.add_argument('--data_category', type=str, default='COCO', choices=['COCO', 'ImageNet'], help="data category")
-    parser.add_argument('--train_imgs', type=str, default='../../DataSet/COCO2017/Train/Imgs', help="train images") # fix
-    parser.add_argument('--train_labels', type=str, default='../../DataSet/COCO2017/Train/Labels', help="train labels") # fix
-    parser.add_argument('--val_imgs', type=str, help="YOLO_Feature train val_imgs", default="../../DataSet/COCO2017/Val/Imgs")
-    parser.add_argument('--val_labels', type=str, help="YOLO_Feature train val_labels", default="../../DataSet/COCO2017/Val/Labels")
+    parser.add_argument('--train_imgs', type=str, default='./2408_yolo/data/coco2017/Train/Imgs', help="train images") # fix
+    parser.add_argument('--train_labels', type=str, default='./2408_yolo/data/coco2017/Train/Labels', help="train labels") # fix
+    parser.add_argument('--val_imgs', type=str, help="YOLO_Feature train val_imgs", default="./2408_yolo/data/coco2017/Val/Imgs")
+    parser.add_argument('--val_labels', type=str, help="YOLO_Feature train val_labels", default="./2408_yolo/data/coco2017/Val/Labels")
     parser.add_argument('--grad_visualize', type=bool, help="YOLO_Feature train grad visualize", default=False)
     parser.add_argument('--feature_map_visualize', type=bool, help="YOLO_Feature train feature map visualize", default=False)
     parser.add_argument('--restart', type=bool, help="YOLO_Feature train from zeor?", default=True)
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     batch_size = args.batch_size
     num_workers = args.num_workers
     epoch_num = args.epoch_num
-    epoch_interval = args.epoch_interval
+    epoch_interval = args.save_interval
     class_num = args.class_num
 
     if args.restart == True:
@@ -63,14 +63,14 @@ if __name__ == "__main__":
     if args.data_category == "COCO":
         train_dataSet = coco_classify_dataset(imgs_path=args.train_imgs,txts_path=args.train_labels, is_train=True, edge_threshold=200)
         val_dataSet = coco_classify_dataset(imgs_path=args.val_imgs,txts_path=args.val_labels, is_train=False, edge_threshold=200)
-    else:
-        from torchvision.transforms import transforms
-        imagenet_transform = transforms.Compose([
-            transforms.ToTensor(),  # height * width * channel -> channel * height * width
-            transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))  # 归一化后.不容易产生梯度爆炸的问题
-        ])
-        train_dataSet = ImageNet(root=args.train_imgs, transform=imagenet_transform)
-        val_dataSet = ImageNet(root=args.val_imgs, transform=imagenet_transform)
+    # else:
+    #     from torchvision.transforms import transforms
+    #     imagenet_transform = transforms.Compose([
+    #         transforms.ToTensor(),  # height * width * channel -> channel * height * width
+    #         transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225))  # 归一化后.不容易产生梯度爆炸的问题
+    #     ])
+    #     train_dataSet = ImageNet(root=args.train_imgs, transform=imagenet_transform)
+    #     val_dataSet = ImageNet(root=args.val_imgs, transform=imagenet_transform)
 
     
     # 3-4.network - optimizer
