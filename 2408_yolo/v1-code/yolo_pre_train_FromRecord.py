@@ -15,20 +15,24 @@ if torch.cuda.is_available():
 else:
     device = torch.device('cpu')
 
+import os
+def locate_path(relative_path):
+    return os.path.join(os.path.dirname(__file__), relative_path)
+
 if __name__ == "__main__":
 
     # 1.training parameters
     parser = argparse.ArgumentParser(description="YOLO_Feature train config")
-    parser.add_argument('--param_pth', type=str, help="YOLO_Feature checkpoint pth", default="./2408_yolo/v1-code/weights/YOLO_Feature_140.pth")
+    parser.add_argument('--param_pth', type=str, help="YOLO_Feature checkpoint pth", default=locate_path('weights/YOLO_Feature_40.pth'))
     parser.add_argument('--batch_size', type=int, help="YOLO_Feature train batch_size", default=32)
     parser.add_argument('--num_workers', type=int, help="YOLO_Feature train num_worker num", default=4)
     parser.add_argument('--epoch_num', type=int, help="YOLO_Feature train epoch_num", default=200)
     parser.add_argument('--epoch_interval', type=int, help="save YOLO_Feature interval", default=10)
     parser.add_argument('--class_num', type=int, help="YOLO_Feature train class_num", default=80)
-    parser.add_argument('--train_imgs', type=str, help="YOLO_Feature train train_imgs", default="../../DataSet/COCO2017/Train/Imgs")
-    parser.add_argument('--train_labels', type=str, help="YOLO_Feature train train_labels", default="../../DataSet/COCO2017/Train/Labels")
-    parser.add_argument('--val_imgs', type=str, help="YOLO_Feature train val_imgs", default="../../DataSet/COCO2017/Val/Imgs")
-    parser.add_argument('--val_labels', type=str, help="YOLO_Feature train val_labels", default="../../DataSet/COCO2017/Val/Labels")
+    parser.add_argument('--train_imgs', type=str, default=locate_path('../data/coco2017/Train/Imgs'), help="train images") # fix
+    parser.add_argument('--train_labels', type=str, default=locate_path('../data/coco2017/Train/Labels'), help="train labels") # fix
+    parser.add_argument('--val_imgs', type=str, help="YOLO_Feature train val_imgs", default=locate_path('../data/coco2017/Val/Imgs'))
+    parser.add_argument('--val_labels', type=str, help="YOLO_Feature train val_labels", default=locate_path('../data/coco2017/Val/Labels'))
     parser.add_argument('--grad_visualize', type=bool, help="YOLO_Feature train grad visualize", default=False)
     parser.add_argument('--feature_map_visualize', type=bool, help="YOLO_Feature train feature map visualize", default=False)
     args = parser.parse_args()

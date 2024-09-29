@@ -19,6 +19,10 @@ from data_process.COCO_DataSet import coco_classify_dataset
 from pretrain.YOLO_Feature import YOLO_Feature
 from utils.model import feature_map_visualize, accuracy
 
+import os
+def locate_path(relative_path):
+    return os.path.join(os.path.dirname(__file__), relative_path)
+
 if __name__ == "__main__":
     
     # ------1.参数解析------
@@ -28,17 +32,17 @@ if __name__ == "__main__":
     parser.add_argument('--lr', type=float, default=3e-4, help="learning rate")
     parser.add_argument('--weight_decay', type=float, default=5e-4, help="weight decay")
     parser.add_argument('--epoch_num', type=int, default=200, help="train epoch")
-    parser.add_argument('--save_interval', type=int, default=10, help="save interval")
+    parser.add_argument('--save_interval', type=int, default=2, help="save interval")
     parser.add_argument('--class_num', type=int, default=80, help="classes num")
     parser.add_argument('--data_category', type=str, default='COCO', choices=['COCO', 'ImageNet'], help="data category")
-    parser.add_argument('--train_imgs', type=str, default='./2408_yolo/data/coco2017/Train/Imgs', help="train images") # fix
-    parser.add_argument('--train_labels', type=str, default='./2408_yolo/data/coco2017/Train/Labels', help="train labels") # fix
-    parser.add_argument('--val_imgs', type=str, help="YOLO_Feature train val_imgs", default="./2408_yolo/data/coco2017/Val/Imgs")
-    parser.add_argument('--val_labels', type=str, help="YOLO_Feature train val_labels", default="./2408_yolo/data/coco2017/Val/Labels")
+    parser.add_argument('--train_imgs', type=str, default=locate_path('../data/coco2017/Train/Imgs'), help="train images") # fix
+    parser.add_argument('--train_labels', type=str, default=locate_path('../data/coco2017/Train/Labels'), help="train labels") # fix
+    parser.add_argument('--val_imgs', type=str, help="YOLO_Feature train val_imgs", default=locate_path('../data/coco2017/Val/Imgs'))
+    parser.add_argument('--val_labels', type=str, help="YOLO_Feature train val_labels", default=locate_path('../data/coco2017/Val/Labels'))
     parser.add_argument('--grad_visualize', type=bool, help="YOLO_Feature train grad visualize", default=False)
     parser.add_argument('--feature_map_visualize', type=bool, help="YOLO_Feature train feature map visualize", default=False)
-    parser.add_argument('--restart', type=bool, help="YOLO_Feature train from zeor?", default=True)
-    parser.add_argument('--pre_weight_file', type=str, help="YOLO_Feature pre weight path", default="./weights/YOLO_Feature_20.pth")
+    parser.add_argument('--restart', type=bool, help="YOLO_Feature train from zeor?", default=False)
+    parser.add_argument('--pre_weight_file', type=str, help="YOLO_Feature pre weight path", default=locate_path('weights/YOLO_Feature_40.pth'))
     args = parser.parse_args()
 
     batch_size = args.batch_size
@@ -52,6 +56,7 @@ if __name__ == "__main__":
         param_dict = {}
         epoch = 0
         epoch_val_loss_min = 999999999
+        optimal_dict = None
     
     else:
         param_dict = torch.load(args.pre_weight_file, map_location=torch.device("cpu"))
@@ -183,9 +188,12 @@ if __name__ == "__main__":
             param_dict['model'] = yolo_feature.state_dict()
             param_dict['optimizer'] = optimizer
             param_dict['epoch'] = epoch
-            param_dict['optimal'] = optimal_dict
+            if optimal_dict is not None:
+                param_dict['optimal'] = optimal_dict
+            else:
+                param_dict['optimal'] = yolo_feature.state_dict()
             param_dict['epoch_val_loss_min'] = epoch_val_loss_min
-            torch.save(param_dict, './2408_yolo/v1-code/weights/YOLO_Feature_' + str(epoch) + '.pth')
+            torch.save(param_dict, locate_path('weights/YOLO_Feature_') + str(epoch) + '.pth')
             writer.close()
             writer = SummaryWriter(logdir='log', filename_suffix='[' + str(epoch) + '~' + str(epoch + epoch_interval) + ']')
 
