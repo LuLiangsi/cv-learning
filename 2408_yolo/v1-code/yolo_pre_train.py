@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
     # 6.train and record
     input_size = 256
-    writer = SummaryWriter(logdir='./log', filename_suffix=' [' + str(epoch) + '~' + str(epoch + epoch_interval) + ']')
+    writer = SummaryWriter(logdir=locate_path('log'), filename_suffix=' [' + str(epoch) + '~' + str(epoch + epoch_interval) + ']')
 
     while epoch < epoch_num:
 
@@ -195,7 +195,7 @@ if __name__ == "__main__":
             param_dict['epoch_val_loss_min'] = epoch_val_loss_min
             torch.save(param_dict, locate_path('weights/YOLO_Feature_') + str(epoch) + '.pth')
             writer.close()
-            writer = SummaryWriter(logdir='log', filename_suffix='[' + str(epoch) + '~' + str(epoch + epoch_interval) + ']')
+            writer = SummaryWriter(logdir=locate_path('log'), filename_suffix='[' + str(epoch) + '~' + str(epoch + epoch_interval) + ']')
 
         avg_train_sample_loss = epoch_train_loss / batch_size / train_loader.__len__()
         avg_val_sample_loss = epoch_val_loss / batch_size / val_loader.__len__()
