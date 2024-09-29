@@ -22,3 +22,4 @@ class YOLO_Loss(nn.Module):
 
         predict_box = list([0,0,0,0])
         
+
