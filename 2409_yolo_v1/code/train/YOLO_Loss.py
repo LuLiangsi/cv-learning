@@ -21,5 +21,12 @@ class YOLO_Loss(nn.Module):
         # [xmin,ymin,xmax,ymax]
 
         predict_box = list([0,0,0,0])
+        predict_box[0] = int(gridX + bounding_box[0] * grid_size)
+        predict_box[1] = int(gridY + bounding_box[1] * grid_size)
+        predict_box[2] = int(bounding_box[2] * img_size)
+        predict_box[3] = int(bounding_box[3] * img_size)
+
+        
+
         
 
